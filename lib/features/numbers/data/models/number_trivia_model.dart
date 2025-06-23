@@ -5,11 +5,17 @@ part 'number_trivia_model.g.dart';
 @JsonSerializable()
 class NumberTriviaModel extends NumberTriviaEntity {
   const NumberTriviaModel({
+     super.id,
     super.number,
     super.text,
+    super.category,
+    super.data,
+    super.isSaved = false,
   });
 
   factory NumberTriviaModel.fromJson(Map<String, dynamic> json) => _$NumberTriviaModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$NumberTriviaModelToJson(this);
+
+
 }

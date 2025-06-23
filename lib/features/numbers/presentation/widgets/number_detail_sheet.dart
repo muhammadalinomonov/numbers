@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:numbers/features/numbers/domain/entities/number_trivia_entity.dart';
 import 'package:numbers/features/numbers/presentation/blocs/number/numbers_bloc.dart';
 import 'package:numbers/features/numbers/presentation/widgets/common_button.dart';
 
 class NumberDetailSheet extends StatefulWidget {
-  const NumberDetailSheet({super.key});
+  const NumberDetailSheet({super.key, required this.numberTrivia});
+
+  final NumberTriviaEntity numberTrivia;
 
   @override
   State<NumberDetailSheet> createState() => _NumberDetailSheetState();
 }
 
 class _NumberDetailSheetState extends State<NumberDetailSheet> {
+  late bool _isSaved;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _isSaved = widget.numberTrivia.isSaved;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NumbersBloc, NumbersState>(
@@ -35,17 +47,47 @@ class _NumberDetailSheetState extends State<NumberDetailSheet> {
               ),
               Align(
                 alignment: Alignment.centerRight,
-                child: IconButton(onPressed: () {}, icon: Icon(Icons.bookmark_border)),
+                child: IconButton(
+                  onPressed: () {
+                    context.read<NumbersBloc>().add(
+                          SaveNumberTriviaEvent(
+                            number: widget.numberTrivia,
+                            onSuccess: () {
+                              if(!_isSaved){
+                                Navigator.pop(context);
+                              }
+                            },
+                            onError: () {
+                              setState(() {
+                                _isSaved = !_isSaved; // Revert the change on error
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Failed to save number trivia'),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            },
+                            isSaved: _isSaved,
+                          ),
+                        );
+
+                    setState(() {
+                      _isSaved = !_isSaved;
+                    });
+                  },
+                  icon: Icon(_isSaved ? Icons.bookmark : Icons.bookmark_border),
+                ),
               ),
               Text(
-                state.numberTrivia.number.toString(),
+                widget.numberTrivia.number.toString(),
                 style: TextStyle(
                   fontSize: 50,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                state.numberTrivia.text,
+                widget.numberTrivia.text,
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black54,

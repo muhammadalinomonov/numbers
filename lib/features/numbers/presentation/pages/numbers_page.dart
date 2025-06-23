@@ -57,7 +57,7 @@ class _NumbersPageState extends State<NumbersPage> {
                   context: context,
                   builder: (context) => BlocProvider.value(
                     value: _numberBloc,
-                    child: NumberDetailSheet(),
+                    child: NumberDetailSheet(numberTrivia: state.numberTrivia),
                   ),
                 );
               } else if (state.getNumberStatus.isFailure) {

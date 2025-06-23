@@ -17,6 +17,7 @@ class NumbersRemoteDataSourceImpl implements NumbersRemoteDataSource {
   @override
   Future<NumberTriviaModel> getConcreteNumberTrivia({required String number, InformationTypes? informationType}) async {
     try {
+
       final endPoint = informationType == InformationTypes.date
           ? '/date'
           : informationType == InformationTypes.math
@@ -26,7 +27,6 @@ class NumbersRemoteDataSourceImpl implements NumbersRemoteDataSource {
         '$number$endPoint',
 
       );
-
       if (response.statusCode != null && response.statusCode! >= 200 && response.statusCode! < 300) {
         return Future.value(NumberTriviaModel.fromJson(response.data));
       } else {
@@ -52,6 +52,7 @@ class NumbersRemoteDataSourceImpl implements NumbersRemoteDataSource {
       final response = await dio.get(
         '/random$endPoint',
       );
+
 
       if (response.statusCode != null && response.statusCode! >= 200 && response.statusCode! < 300) {
         return Future.value(NumberTriviaModel.fromJson(response.data));

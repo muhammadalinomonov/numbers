@@ -18,7 +18,7 @@ class GetConcreteNumberUseCase implements UseCase<NumberTriviaEntity, NumberTriv
 
 class NumberTriviaParams {
   final String number;
-  final InformationTypes? infoType;
+  final InformationTypes infoType;
 
-  NumberTriviaParams({required this.number, this.infoType});
+  NumberTriviaParams({required this.number,required this.infoType});
 }
